@@ -68,11 +68,11 @@ public class TileTexture extends MarvinAbstractImagePlugin{
     	MarvinImage tileFlippedV = new MarvinImage(tileWidth, tileHeight);
     	MarvinImage tileFlippedHV = new MarvinImage(tileWidth, tileHeight);
     	MarvinAttributes attr = new MarvinAttributes();
-		attr.set(Flip.ATTR_FLIP, Flip.FLIP_HORIZONTAL);
+		attr.set(Flip.ATTR_FLIP, Flip.Type.Horizontal);
     	flip.process(tile, tileFlippedH, attr, null);
     	flip.process(tile, tileFlippedHV, attr, null);
 
-        attr.set(Flip.ATTR_FLIP, Flip.FLIP_VERTICAL);
+        attr.set(Flip.ATTR_FLIP, Flip.Type.Vertical);
     	flip.process(tile, tileFlippedV, attr, null);
     	flip.process(tileFlippedHV, tileFlippedHV, attr, null);
     	    	

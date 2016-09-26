@@ -26,11 +26,13 @@ import marvin.util.MarvinAttributes;
 public class Flip extends MarvinAbstractImagePlugin
 {
 	public static final String ATTR_FLIP = "flip";
-	public final static String FLIP_HORIZONTAL = "horizontal";
-	public final static String FLIP_VERTICAL = "vertical";
+    public enum Type{
+        Horizontal,
+        Vertical
+    }
 
 	public void load(){
-		setAttribute(ATTR_FLIP, FLIP_HORIZONTAL);
+		setAttribute(ATTR_FLIP, Type.Horizontal);
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){
@@ -48,10 +50,10 @@ public class Flip extends MarvinAbstractImagePlugin
 	)
 	{
         boolean[][]				arrMask;
-		String l_operation = (String)getAttribute(ATTR_FLIP, a_attributesIn);
+		Type l_operation = (Type)getAttribute(ATTR_FLIP, a_attributesIn);
 		arrMask = a_mask.getMaskArray();
 		
-		if(l_operation.equals(FLIP_HORIZONTAL)){
+		if(l_operation.equals(Type.Horizontal)){
 			flipHorizontal(a_imageIn, a_imageOut, arrMask);
 		}
 		else{

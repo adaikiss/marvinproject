@@ -26,17 +26,12 @@ import marvin.util.MarvinAttributes;
  * @author Fabio Andrijauskas
  */
 public class Mode extends MarvinAbstractImagePlugin {
-
-	private MarvinAttributesPanel	attributesPanel;
-	MarvinAttributes 				attributes;
-	MarvinPerformanceMeter 			performanceMeter;
+	public static final String ATTR_SIZE = "size";
 
 	public void load() {
-		attributes = getAttributes();
-		setAttribute("size", 3);
+		setAttribute(ATTR_SIZE, 3);
 		//setAttribute("shift", 0);
 		//setAttribute("circlesDistance", 0);
-		performanceMeter = new MarvinPerformanceMeter();
 	}
 
 	public void process
@@ -49,10 +44,8 @@ public class Mode extends MarvinAbstractImagePlugin {
 		boolean a_previewMode
 	)
 	{
-		performanceMeter.start("Moda Filter");
 
-
-		int l_size = (Integer)getAttribute("size");
+		int l_size = (Integer)getAttribute(ATTR_SIZE, a_attributesIn);
 		int mapSize = l_size * l_size;
 		int l_totalRed = 0;
 		int l_totalGreen = 0;
@@ -67,9 +60,6 @@ public class Mode extends MarvinAbstractImagePlugin {
 		Map<Integer,Integer> mapModaG;
 		Map<Integer,Integer> mapModaB;
 		
-		performanceMeter.enableProgressBar("Moda Filter" ,a_imageIn.getWidth() *  a_imageIn.getHeight() );
-		performanceMeter.startEvent("Moda Filter");
-		
 		boolean[][] l_arrMask = a_mask.getMaskArray();
 
 		for (int x = 0; x < width; x++) {
@@ -81,9 +71,9 @@ public class Mode extends MarvinAbstractImagePlugin {
 				tmpx  = x - l_size;
 				tmpy  = y - l_size;
 
-				mapModaR = new HashMap<Integer, Integer>(mapSize);
-				mapModaG = new HashMap<Integer, Integer>(mapSize);
-				mapModaB = new HashMap<Integer, Integer>(mapSize);
+				mapModaR = new HashMap<>(mapSize);
+				mapModaG = new HashMap<>(mapSize);
+				mapModaB = new HashMap<>(mapSize);
 
 				if(tmpx < 0)
 					tmpx = 0;
@@ -106,15 +96,15 @@ public class Mode extends MarvinAbstractImagePlugin {
 						if(xm >= 0 && xm < width && ym >= 0 && ym < height  )
 						{
 							int rgb = a_imageIn.getIntColor(xm, ym);
-							l_totalRed = (int)(rgb & 0x00FF0000) >>> 16;
-							l_totalGreen = (int) ((rgb & 0x0000FF00) >>> 8);
-							l_totalBlue = (int) (rgb & 0x000000FF);
+							l_totalRed = (rgb & 0x00FF0000) >>> 16;
+							l_totalGreen = (rgb & 0x0000FF00) >>> 8;
+							l_totalBlue = rgb & 0x000000FF;
 
 							Integer l_val = mapModaR.get(l_totalRed);
 							if(l_val == null)
 								l_val = 0;
 							
-							mapModaR.put((Integer)l_totalRed, ++l_val);
+							mapModaR.put(l_totalRed, ++l_val);
 						
 							
 							
@@ -122,7 +112,7 @@ public class Mode extends MarvinAbstractImagePlugin {
 							if(l_val == null)
 								l_val = 0;
 							
-							mapModaG.put((Integer)l_totalGreen, ++l_val);
+							mapModaG.put(l_totalGreen, ++l_val);
 							
 							
 							
@@ -172,20 +162,10 @@ public class Mode extends MarvinAbstractImagePlugin {
 
 				
 			}
-			performanceMeter.incProgressBar(height);
-			performanceMeter.stepsFinished(height);
 		}
-		performanceMeter.finishEvent();
-		performanceMeter.finish();
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("lblWidth", "Size:");
-			attributesPanel.addTextField("txtSize", "size", attributes);
-			attributesPanel.newComponentRow();
-		}
-		return attributesPanel;
+		return null;
 	}
 }

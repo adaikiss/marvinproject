@@ -20,18 +20,23 @@ import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
 import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.plugin.MarvinImagePlugin;
+import marvin.plugin.MarvinPluginFactory;
 import marvin.util.MarvinAttributes;
 import marvin.util.MarvinPluginLoader;
+import org.marvinproject.image.color.brightnessAndContrast.BrightnessAndContrast;
+import org.marvinproject.image.edge.edgeDetector.EdgeDetector;
 
 public class DetermineGround extends MarvinAbstractImagePlugin{
 	
 	private MarvinImagePlugin 	l_pluginEdgeDetector,
 								l_pluginBC;
+	private MarvinAttributes bcAttr;
 	
 	public void load(){
-		l_pluginEdgeDetector = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.edge.edgeDetector.jar");
-		l_pluginBC = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.brightnessAndContrast.jar");
-		l_pluginBC.setAttribute("contrast", 255);
+		l_pluginEdgeDetector = MarvinPluginFactory.get(EdgeDetector.class);
+		l_pluginBC = MarvinPluginFactory.get(BrightnessAndContrast.class);
+		bcAttr = new MarvinAttributes();
+		bcAttr.set(BrightnessAndContrast.ATTR_CONTRAST, 255);
 	}
 	
 	public MarvinAttributesPanel getAttributesPanel(){ return null; }
@@ -41,14 +46,15 @@ public class DetermineGround extends MarvinAbstractImagePlugin{
     (
     	MarvinImage a_imageIn, 
     	MarvinImage a_imageOut, 
-    	MarvinAttributes a_attributesOut, 
+    	MarvinAttributes a_attributesIn,
+    	MarvinAttributes a_attributesOut,
     	MarvinImageMask a_mask,
     	boolean a_previewMode
     )
     {
     	MarvinImage l_originalImage = a_imageIn.clone();
-    	l_pluginEdgeDetector.process(a_imageIn, a_imageOut, a_attributesOut, a_mask, a_previewMode);
-    	l_pluginBC.process(a_imageOut, a_imageOut, a_attributesOut, a_mask, a_previewMode);
+    	l_pluginEdgeDetector.process(a_imageIn, a_imageOut, a_attributesIn, a_attributesOut, a_mask, a_previewMode);
+    	l_pluginBC.process(a_imageOut, a_imageOut, bcAttr, a_attributesOut, a_mask, a_previewMode);
     	
     	// remove black border
     	a_imageOut.drawRect(0, 0,a_imageOut.getWidth(), a_imageOut.getHeight(), Color.white);
@@ -118,7 +124,7 @@ public class DetermineGround extends MarvinAbstractImagePlugin{
      * @param a_image
      * @param a_x
      * @param a_y
-     * @param a_regionRGB
+     * @param a_regionTargetRGB
      * @param a_regionNewRGB
      */
     private void floodFill(MarvinImage a_image, int a_x, int a_y, int a_regionTargetRGB, int a_regionNewRGB){

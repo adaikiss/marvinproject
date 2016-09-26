@@ -23,17 +23,12 @@ import marvin.util.MarvinAttributes;
  * @author Fabio Andrijauskas
  */
 public class Minimum extends MarvinAbstractImagePlugin {
-
-	private MarvinAttributesPanel	attributesPanel;
-	MarvinAttributes 				attributes;
-	MarvinPerformanceMeter 			performanceMeter;
+	public static final String ATTR_SIZE = "size";
 
 	public void load() {
-		attributes = getAttributes();
-		setAttribute("size", 3);
+		setAttribute(ATTR_SIZE, 3);
 		//setAttribute("shift", 0);
 		//setAttribute("circlesDistance", 0);
-		performanceMeter = new MarvinPerformanceMeter();
 	}
 
 	public void process
@@ -46,10 +41,7 @@ public class Minimum extends MarvinAbstractImagePlugin {
 		boolean a_previewMode
 	)
 	{
-		performanceMeter.start("Minimum Filter");
-
-
-		int l_size = (Integer)getAttribute("size");
+		int l_size = (Integer)getAttribute(ATTR_SIZE, a_attributesIn);
 		int l_totalRed = 0;
 		int l_totalGreen = 0;
 		int l_totalBlue = 0;
@@ -59,9 +51,6 @@ public class Minimum extends MarvinAbstractImagePlugin {
 		int width = a_imageIn.getWidth();
 		int height = a_imageIn.getHeight();
 
-		performanceMeter.enableProgressBar("Minimum Filter" ,a_imageIn.getWidth() *  a_imageIn.getHeight() );
-		performanceMeter.startEvent("Minimum Filter");
-		
 		boolean[][] l_arrMask = a_mask.getMaskArray();
 
 		for (int x = 0; x < width; x++) {
@@ -128,20 +117,10 @@ public class Minimum extends MarvinAbstractImagePlugin {
 				l_totalGreen = 0;
 				l_totalBlue = 0;
 			}
-			performanceMeter.incProgressBar(height);
-			performanceMeter.stepsFinished(height);
 		}
-		performanceMeter.finishEvent();
-		performanceMeter.finish();
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("lblWidth", "Size:");
-			attributesPanel.addTextField("txtSize", "size", attributes);
-			attributesPanel.newComponentRow();
-		}
-		return attributesPanel;
+		return null;
 	}
 }

@@ -74,15 +74,15 @@ public class Steganography extends MarvinAbstractImagePlugin implements ActionLi
 	
 	public void load() {
 		attributes = getAttributes();
-		setAttribute("txtLines", "");
-		setAttribute("cbSelection", "Write on Image");
-		setAttribute("cbType", "Store a file");
+		attributes.set("txtLines", "");
+		attributes.set("cbSelection", "Write on Image");
+		attributes.set("cbType", "Store a file");
 	}
 	
 	
 		
 	public Action getAction(){
-		String s = getAttribute("cbSelection").toString();
+		String s = attributes.get("cbSelection").toString();
 		if(s.equals("Write on Image")){
 			return (Action.MODE_WRITE);
 		}else{
@@ -91,7 +91,7 @@ public class Steganography extends MarvinAbstractImagePlugin implements ActionLi
 	}
 	
 	public Type getType(){
-		String s = getAttribute("cbType").toString();
+		String s = attributes.get("cbType").toString();
 		if(s.equals("Store a file")){
 			return (Type.TYPE_FILE);
 		}else{
@@ -100,7 +100,7 @@ public class Steganography extends MarvinAbstractImagePlugin implements ActionLi
 	}
 		
 	public void getHEADER(MarvinImage a_image){
-		//Cabe�alho do arquivo no seguinte formato:
+		//Cabelalho do arquivo no seguinte formato:
 		//Tipo_do_armazenamento/Extensao/Qtde_Pixels
 		//F/docx/12345
 		int cont = 0;
@@ -202,7 +202,7 @@ public class Steganography extends MarvinAbstractImagePlugin implements ActionLi
 		MarvinImage a_imageOut,
 		MarvinAttributes a_attributesIn,
 		MarvinAttributes a_attributesOut,
-		MarvinImageMask a_mask, 
+		MarvinImageMask a_mask,
 		boolean a_previewMode
 	)
 	{

@@ -16,29 +16,24 @@ import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
 import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.plugin.MarvinImagePlugin;
+import marvin.plugin.MarvinPluginFactory;
 import marvin.util.MarvinAttributes;
-import marvin.util.MarvinPluginLoader;
+import org.marvinproject.image.color.grayScale.GrayScale;
 
 public class GrayScaleQuantization extends MarvinAbstractImagePlugin{
-
-	private MarvinAttributesPanel	attributesPanel;
+	public static final String ATTR_SHADES = "shades";
 	private MarvinImagePlugin 		gray;
 	
 	@Override
 	public void load() {
-		gray = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.grayScale.jar");
+		gray = MarvinPluginFactory.get(GrayScale.class);
 		
-		setAttribute("shades", 10);
+		setAttribute(ATTR_SHADES, 10);
 	}
 	
 	@Override
 	public MarvinAttributesPanel getAttributesPanel() {
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("lblShades", "Shades:");
-			attributesPanel.addTextField("txtShades", "shades", getAttributes());
-		}
-		return attributesPanel;
+		return null;
 	}
 
 	@Override
@@ -52,7 +47,7 @@ public class GrayScaleQuantization extends MarvinAbstractImagePlugin{
 		boolean preview)
 	{
 		
-		int colors = (Integer)getAttribute("shades");
+		int colors = (Integer)getAttribute(ATTR_SHADES, attrIn);
 		int range = 255/colors;
 		gray.process(imageIn.clone(), imageIn);
 		int c;

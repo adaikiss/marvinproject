@@ -22,14 +22,10 @@ import marvin.util.MarvinAttributes;
  * @author Gabriel Ambrosio Archanjo
  */
 public class Subtract extends MarvinAbstractImagePlugin{
-
-	MarvinAttributes attributes;
-	MarvinImage imageBackground;
-	int colorRange;
-	
+    public static final String ATTR_COLOR_RANGE = "colorRange";
+    public static final String ATTR_BACKGROUND_IMAGE = "backgroundImage";
 	public void load(){
-		attributes = getAttributes();
-		setAttribute("colorRange", 30);
+		setAttribute(ATTR_COLOR_RANGE, 30);
 	}
 	
 	public MarvinAttributesPanel getAttributesPanel(){ return null; }
@@ -39,13 +35,16 @@ public class Subtract extends MarvinAbstractImagePlugin{
     (
     	MarvinImage a_imageIn, 
     	MarvinImage a_imageOut, 
-    	MarvinAttributes a_attributesOut, 
+    	MarvinAttributes a_attributesIn,
+    	MarvinAttributes a_attributesOut,
     	MarvinImageMask a_mask,
     	boolean a_previewMode
     )
     {
-    	imageBackground = (MarvinImage)getAttribute("backgroundImage");
-    	colorRange = (Integer)getAttribute("colorRange");
+		MarvinImage imageBackground;
+		int colorRange;
+    	imageBackground = (MarvinImage)getAttribute(ATTR_BACKGROUND_IMAGE, a_attributesIn);
+    	colorRange = (Integer)getAttribute(ATTR_COLOR_RANGE, a_attributesIn);
     	
     	int l_red,
     		l_redBg,

@@ -106,7 +106,7 @@ public class Benchmark {
 				imageOut = new MarvinImage(image.getWidth(), image.getHeight());
 		
 				time = System.currentTimeMillis();
-				tempPlugin.process(image, imageOut, null, MarvinImageMask.NULL_MASK, false);
+				tempPlugin.process(image, imageOut, null, null, MarvinImageMask.NULL_MASK, false);
 				timeByPlugin[i][e] = (System.currentTimeMillis()-time);
 				System.out.print(".");
 			}

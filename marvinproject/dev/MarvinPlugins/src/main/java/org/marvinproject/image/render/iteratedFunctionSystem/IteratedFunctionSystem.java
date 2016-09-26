@@ -11,23 +11,19 @@ https://groups.google.com/forum/#!forum/marvin-project
 
 package org.marvinproject.image.render.iteratedFunctionSystem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import marvin.gui.MarvinAttributesPanel;
-import marvin.gui.MarvinFilterWindow;
 import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
 import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 
-public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
+import java.util.ArrayList;
+import java.util.List;
 
-	private MarvinAttributesPanel	attributesPanel;
-	private MarvinAttributes 		attributes;
-	
-	private List<Rule> rules;
-	
+public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
+	public static final String ATTR_RULES = "rules";
+	public static final String ATTR_ITERATIONS = "iterations";
+
 	// Testing String
 	private final static String EXAMPLE_RULES = 	"0,0,0,0.16,0,0,0.01\n"+
 											"0.85,0.04,-0.04,0.85,0,1.6,0.85\n"+
@@ -35,11 +31,8 @@ public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
 											"-0.15,0.28,0.26,0.24,0,0.44,0.07\n";
 	@Override
 	public void load() {
-		attributes = getAttributes();
-		setAttribute("rules", EXAMPLE_RULES);
-		setAttribute("iterations", 1000000);
-		
-		rules = new ArrayList<Rule>();
+		setAttribute(ATTR_RULES, EXAMPLE_RULES);
+		setAttribute(ATTR_ITERATIONS, 1000000);
 	}
 
 	@Override
@@ -47,12 +40,13 @@ public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
 	(
 		MarvinImage imageIn, 
 		MarvinImage imageOut, 
-		MarvinAttributes out2,
-		MarvinImageMask a_mask, 
+		MarvinAttributes attrIn,
+		MarvinAttributes attrOut,
+		MarvinImageMask a_mask,
 		boolean previewMode
 	){
-		loadRules();
-		int iterations = (Integer)getAttribute("iterations");
+        List<Rule> rules = loadRules(attrIn);
+		int iterations = (Integer)getAttribute(ATTR_ITERATIONS, attrIn);
 		
 		double x0 = 0;
 		double y0 = 0;
@@ -69,7 +63,7 @@ public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
 		imageOut.clear(0xFFFFFFFF);
 		
 		for(int i=0; i<iterations; i++){
-			tempRule = getRule();
+			tempRule = getRule(rules);
 			applyRule(point, tempRule);
 			
 			x = point[0];
@@ -109,7 +103,7 @@ public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
 		point[1] = y0;
 		
 		for(int i=0; i<iterations; i++){
-			tempRule = getRule();
+			tempRule = getRule(rules);
 			applyRule(point, tempRule);
 			
 			x = (int)(point[0]*factor)+startX;
@@ -124,24 +118,20 @@ public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
 
 	@Override
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("lblRules","Rules:");
-			attributesPanel.newComponentRow();
-			attributesPanel.addTextArea("txtRules","rules", 8, 40, attributes);
-		}
-		return attributesPanel;
+		return null;
 	}
 	
-	private void loadRules(){
-		String r[] = ((String)(getAttribute("rules"))).split("\n");
-		
+	private List<Rule> loadRules(MarvinAttributes attrIn){
+		String r[] = ((String)(getAttribute("rules", attrIn))).split("\n");
+        List<Rule> rules = new ArrayList<>(r.length);
+
 		for(int i=0; i<r.length; i++){
-			addRule(r[i]);
+			addRule(rules, r[i]);
 		}
+		return rules;
 	}
 
-	private void addRule(String rule){
+	private void addRule(List<Rule> rules, String rule){
 		rule = rule.replace(" ", "");
 		String attr[] = rule.split(",");
 		
@@ -161,7 +151,7 @@ public class IteratedFunctionSystem extends MarvinAbstractImagePlugin{
 		}
 	}
 	
-	private Rule getRule(){
+	private Rule getRule(List<Rule> rules){
 		double random = Math.random();
 		double sum=0;
 		int i;

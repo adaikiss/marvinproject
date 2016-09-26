@@ -11,15 +11,13 @@ https://groups.google.com/forum/#!forum/marvin-project
 
 package org.marvinproject.image.render.lindenmayer;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Polygon;
-import java.util.Stack;
-
 import marvin.image.MarvinImage;
 
+import java.awt.*;
+import java.util.Stack;
+
 /**
- * @author Gabriel Ambrósio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class TurtleGraphics {
 

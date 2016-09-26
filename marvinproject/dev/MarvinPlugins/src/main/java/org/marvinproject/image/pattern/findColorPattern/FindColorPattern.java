@@ -39,17 +39,15 @@ public class FindColorPattern extends MarvinAbstractImagePlugin{
 	
 	private int					colorRange;
 	
-	private MarvinAttributes	attributes;
-	
+
 	private boolean				targetPatternLoaded=false;
 	
 	public void load(){
-		attributes = getAttributes();
-		attributes.set("differenceColorRange", 30);
-		attributes.set("regionPx", 0);
-		attributes.set("regionPy", 0);
-		attributes.set("regionWidth", 1);
-		attributes.set("regionHeight", 1);
+		setAttribute("differenceColorRange", 30);
+		setAttribute("regionPx", 0);
+		setAttribute("regionPy", 0);
+		setAttribute("regionWidth", 1);
+		setAttribute("regionHeight", 1);
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){return null;}
@@ -58,24 +56,25 @@ public class FindColorPattern extends MarvinAbstractImagePlugin{
 	(
 		MarvinImage a_imageIn, 
 		MarvinImage a_imageOut,
-		MarvinAttributes a_attributesOut, 
-		MarvinImageMask a_mask, 
+		MarvinAttributes a_attributesIn,
+		MarvinAttributes a_attributesOut,
+		MarvinImageMask a_mask,
 		boolean a_previewMode
 	) 
 	{
 		image = a_imageIn;
 		if(!targetPatternLoaded){
 			
-			regionPx = (Integer)attributes.get("regionPx");
-			regionPy = (Integer)attributes.get("regionPy");
-			regionWidth = (Integer)attributes.get("regionWidth");
-			regionHeight = (Integer)attributes.get("regionHeight");
+			regionPx = (Integer)getAttribute("regionPx");
+			regionPy = (Integer)getAttribute("regionPy");
+			regionWidth = (Integer)getAttribute("regionWidth");
+			regionHeight = (Integer)getAttribute("regionHeight");
 			
 			loadTargetPattern(regionPx, regionPy, regionWidth, regionHeight);			
 			targetPatternLoaded = true;
 		}
 		else{
-			colorRange = (Integer)attributes.get("differenceColorRange");
+			colorRange = (Integer)getAttribute("differenceColorRange");
 			imageWidth = a_imageIn.getWidth();
 			imageHeight = a_imageIn.getHeight();		
 			

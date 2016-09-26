@@ -12,10 +12,8 @@ https://groups.google.com/forum/#!forum/marvin-project
 package org.marvinproject.image.restoration.noiseReduction;
 
 import marvin.gui.MarvinAttributesPanel;
-import marvin.gui.MarvinFilterWindow;
 import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
-import marvin.performance.MarvinPerformanceMeter;
 import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 
@@ -30,17 +28,7 @@ import marvin.util.MarvinAttributes;
 
 public class NoiseReduction extends MarvinAbstractImagePlugin {
 	
-	MarvinPerformanceMeter performanceMeter;
-	double mat1[][],mat2[][],mat3[][],mat4[][],mata[][];
-	double img_x[][],img_y[][],img_xx[][],img_yy[][],img_xy[][];
-	double matr[][],matg[][],matb[][];
-	double img_org[][];
-	int width;
-	int height;
-	
-	
 	public void load(){
-		performanceMeter = new MarvinPerformanceMeter();
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){return null;}
@@ -49,97 +37,72 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 	(
 	   	MarvinImage a_imageIn, 
 	   	MarvinImage a_imageOut, 
-	  	MarvinAttributes a_attributesOut, 
+	  	MarvinAttributes attrIn,
+	  	MarvinAttributes attrOut,
 	   	MarvinImageMask a_mask,
 	   	boolean a_previewMode
 	)
 	{
-		width=a_imageIn.getWidth();
-		height=a_imageIn.getHeight();
-		
-		mat1=new double[width][height];
-		mat2=new double[width][height];
-		mat4=new double[width][height];
-		mata=new double[width][height];
-		
-		img_x=new double[width][height];
-		img_y=new double[width][height];
-		img_xx=new double[width][height];
-		img_yy=new double[width][height];
-		img_xy=new double[width][height];
-		
-		matr=new double[width][height];
-		matg=new double[width][height];
-		matb=new double[width][height];
-			
-		
-		
-		performanceMeter.start("RestoreNoise");
-		performanceMeter.startEvent("RestoreNoise");
-				
-		
+        Attributes attr = new Attributes(a_imageIn);
 		int iter=20; //no of iterations
 		
 		// Put the color values in double array
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				matr[x][y]= a_imageIn.getIntComponent0(x, y);
-				matg[x][y]= a_imageIn.getIntComponent1(x, y);
-				matb[x][y]= a_imageIn.getIntComponent2(x, y);
+		for (int x = 0; x < attr.width; x++) {
+			for (int y = 0; y < attr.height; y++) {
+                attr.matr[x][y]= a_imageIn.getIntComponent0(x, y);
+                attr.matg[x][y]= a_imageIn.getIntComponent1(x, y);
+                attr.matb[x][y]= a_imageIn.getIntComponent2(x, y);
 			}
 		}
 		
 		// Call denoise function 		
-		matr=denoise(matr,iter);
-		matg=denoise(matg,iter);
-		matb=denoise(matb,iter);	
+        attr.matr=denoise(attr.matr,iter, attr);
+        attr.matg=denoise(attr.matg,iter, attr);
+        attr.matb=denoise(attr.matb,iter, attr);
 		
 				
-		for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					a_imageOut.setIntColor(x,y,(int)truncate(matr[x][y]),(int)truncate(matg[x][y]),(int)truncate(matb[x][y]));
+		for (int x = 0; x < attr.width; x++) {
+				for (int y = 0; y < attr.height; y++) {
+					a_imageOut.setIntColor(x,y,(int)truncate(attr.matr[x][y]),(int)truncate(attr.matg[x][y]),(int)truncate(attr.matb[x][y]));
 				}
-				performanceMeter.stepsFinished(height);
 		}
-		performanceMeter.finishEvent();
-		performanceMeter.finish();
 	}
 	
 	
     //Function : denoise - Restores noisy images, input- double array containing color data  
-	public double[][] denoise(double mat[][],int iter)
+	public double[][] denoise(double mat[][],int iter, Attributes attr)
 	{
-		img_org=new double[width][height];
-		double img_res[][]=new double[width][height];
+        attr.img_org=new double[attr.width][attr.height];
+		double img_res[][]=new double[attr.width][attr.height];
 		double l_currentNum;
 		double l_currentDen;
 		int val=1;double lam=0;
 		double dt=0.4;
-		
-		
-		img_org=mat;
+
+
+        attr.img_org=mat;
 	
 		//Perform iterations
 		
 		for (int it = 0;it<iter;it++)
 		{
 			//compute derivatives  
-			img_x=diff_x(mat);
-			img_y=diff_y(mat);
-			img_xx=diff_xx(mat);
-			img_yy=diff_yy(mat);
-			img_xy=diff_xy(mat);
+            attr.img_x=diff_x(mat, attr);
+            attr.img_y=diff_y(mat, attr);
+            attr.img_xx=diff_xx(mat, attr);
+            attr.img_yy=diff_yy(mat, attr);
+            attr.img_xy=diff_xy(mat, attr);
 					
-			for(int i = 0;i<width;i++)
+			for(int i = 0;i<attr.width;i++)
 			{
-				for (int j=0;j<height;j++)
+				for (int j=0;j<attr.height;j++)
 				{	
-					double a= img_xx[i][j]*(val+Math.pow(img_y[i][j],2));
-					double b=(2*img_x[i][j]*img_y[i][j]*img_xy[i][j]);
-					double c=(img_yy[i][j]*(val+Math.pow(img_x[i][j],2)));
+					double a= attr.img_xx[i][j]*(val+Math.pow(attr.img_y[i][j],2));
+					double b=(2*attr.img_x[i][j]*attr.img_y[i][j]*attr.img_xy[i][j]);
+					double c=(attr.img_yy[i][j]*(val+Math.pow(attr.img_x[i][j],2)));
 					l_currentNum= a-b+c;
-					l_currentDen=Math.pow((val+Math.pow(img_x[i][j],2)+Math.pow(img_y[i][j],2)),(1.5));
-					img_res[i][j]=(l_currentNum/l_currentDen)+ lam*(img_org[i][j]-mat[i][j]);
+					l_currentDen=Math.pow((val+Math.pow(attr.img_x[i][j],2)+Math.pow(attr.img_y[i][j],2)),(1.5));
+					img_res[i][j]=(l_currentNum/l_currentDen)+ lam*(attr.img_org[i][j]-mat[i][j]);
 					mat[i][j]=mat[i][j]+dt*img_res[i][j];//evolve image by dt.
 				}		
 			}
@@ -151,20 +114,20 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 	
 	
 	// Function : diff_x - To compute differntiation along x axis. 
-	public double[][] diff_x(double matx[][])
+	public double[][] diff_x(double matx[][], Attributes attr)
 	{
-		mat3=new double[width][height];
+        attr.mat3=new double[attr.width][attr.height];
 		double mat1,mat2;
-		for(int i = 0;i<width;i++)
+		for(int i = 0;i<attr.width;i++)
 		  {
-			for (int j=0;j<height;j++)
+			for (int j=0;j<attr.height;j++)
 			{				
 			   if (j==0)
 			   {
 				   mat1=matx[i][j];
 				   mat2=matx[i][j+1];
 			   }
-			   else if (j==height-1)
+			   else if (j==attr.height-1)
 			   {
 				   mat1=matx[i][j-1];
 				   mat2=matx[i][j];
@@ -174,29 +137,29 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 				   mat1=matx[i][j-1];
 				   mat2=matx[i][j+1];
 			   }
-			   mat3[i][j]=(mat2-mat1)/2;
+                attr.mat3[i][j]=(mat2-mat1)/2;
 			}
 		  }
-		return mat3;
+		return attr.mat3;
 	}
 	
 	
 	
 	// Function : diff_y -To compute differntiation along y axis.
-	public double[][] diff_y(double maty[][])
-	{	
-		mat3=new double[width][height];
+	public double[][] diff_y(double maty[][], Attributes attr)
+	{
+        attr.mat3=new double[attr.width][attr.height];
 		double mat1,mat2;
-		for(int i = 0;i<width;i++)
+		for(int i = 0;i<attr.width;i++)
 		  {
-			for (int j=0;j<height;j++)
+			for (int j=0;j<attr.height;j++)
 			{				
 			  if (i==0)
 			   {
 				   mat1=maty[i][j];
 				   mat2=maty[i+1][j];
 			   }
-			   else if (i==width-1)
+			   else if (i==attr.width-1)
 			   {
 				   mat1=maty[i-1][j];
 				   mat2=maty[i][j];
@@ -206,23 +169,23 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 				   mat1=maty[i-1][j];
 				   mat2=maty[i+1][j];
 			   }
-			  mat3[i][j]=(mat2-mat1)/2;
+                attr.mat3[i][j]=(mat2-mat1)/2;
 			}
 		  }
 	     // maty= subMatrix(mat2,mat1,width,height);
 		  
-		return mat3;
+		return attr.mat3;
 	   }
 	
 	
 	//Function : diff_xx -To compute second order differentiation along x axis.
-	public double[][] diff_xx(double matxx[][])
+	public double[][] diff_xx(double matxx[][], Attributes attr)
 	{
-		mat3=new double[width][height];
+        attr.mat3=new double[attr.width][attr.height];
 		double mat1,mat2;
-		for(int i = 0;i<width;i++)
+		for(int i = 0;i<attr.width;i++)
 		{
-			for (int j=0;j<height;j++)
+			for (int j=0;j<attr.height;j++)
 			 {				
 				if (j==0)
 				{
@@ -230,7 +193,7 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 					mat2=matxx[i][j+1];
 				   
 				}
-				else if (j==height-1)
+				else if (j==attr.height-1)
 				{
 					mat1=matxx[i][j-1];
 					mat2=matxx[i][j];
@@ -241,30 +204,30 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 					mat2=matxx[i][j+1];
 				}
 
-				mat3[i][j]=(mat1+mat2-2*matxx[i][j]);
+                 attr.mat3[i][j]=(mat1+mat2-2*matxx[i][j]);
 			 }
 				
 		  }
-		 return mat3;
+		 return attr.mat3;
 	}		
 	
 	
 	
 	//Function : diff_yy - To compute second order differentiation along y axis.
-	public double[][] diff_yy(double matyy[][])
+	public double[][] diff_yy(double matyy[][], Attributes attr)
 	{
-		mat3=new double[width][height];
+        attr.mat3=new double[attr.width][attr.height];
 		double mat1,mat2;
-		for(int i = 0;i<width;i++)
+		for(int i = 0;i<attr.width;i++)
 		  {
-			for (int j=0;j<height;j++)
+			for (int j=0;j<attr.height;j++)
 			{				
 			   if (i==0)
 			   {
 				   mat1=matyy[i][j];
 				   mat2=matyy[i+1][j];
 			   }
-			   else if (i==width-1)
+			   else if (i==attr.width-1)
 			   {
 				   mat1=matyy[i-1][j];
 				   mat2=matyy[i][j];
@@ -274,76 +237,76 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 				   mat1=matyy[i-1][j];
 				   mat2=matyy[i+1][j];
 			   }
-			   mat3[i][j]=(mat1+mat2-2*matyy[i][j]);
+                attr.mat3[i][j]=(mat1+mat2-2*matyy[i][j]);
 			}
 		  }
-		return mat3;
+		return attr.mat3;
 		
 	}
 		 
 	
 	
 	//Function: diff_xy  -To compute differentiation along xy direction
-	public double[][] diff_xy(double matxy[][])
+	public double[][] diff_xy(double matxy[][], Attributes attr)
 	{
-		
-		mat3=new double[width][height];
+
+        attr.mat3=new double[attr.width][attr.height];
 		double Dp;
 		double Dm;
 				
-		for(int i = 0;i<width-1;i++)
+		for(int i = 0;i<attr.width-1;i++)
 		  {
-			for (int j=0;j<height-1;j++)
-			{				
-				mat1[i][j]=matxy[i+1][j+1];
-				mat2[i+1][j+1]=matxy[i][j];
-		        mat3[i+1][j]=matxy[i][j+1];
-		        mat4[i][j+1]=matxy[i+1][j];
+			for (int j=0;j<attr.height-1;j++)
+			{
+                attr.mat1[i][j]=matxy[i+1][j+1];
+                attr.mat2[i+1][j+1]=matxy[i][j];
+                attr.mat3[i+1][j]=matxy[i][j+1];
+                attr.mat4[i][j+1]=matxy[i+1][j];
 			}
 
 		  }
 		
 		
-		 for(int i = 0;i<width;i++)
+		 for(int i = 0;i<attr.width;i++)
 		  {
-			for (int j=0;j<height;j++)
+			for (int j=0;j<attr.height;j++)
 			{	
-				 if (j==height-1 && i<width-1)
-					 mat1[i][j]=mat1[i][j-1];
+				 if (j==attr.height-1 && i<attr.width-1)
+                     attr.mat1[i][j]=attr.mat1[i][j-1];
 				 
-				 else if(i==width-1)
-		             mat1[i][j]=mat1[i-1][j];
+				 else if(i==attr.width-1)
+                     attr.mat1[i][j]=attr.mat1[i-1][j];
 		         
 		         
 		         if (i==0 && j>0)
-		             mat2[i][j]= mat2[1][j];
+                     attr.mat2[i][j]= attr.mat2[1][j];
 		         else if(j==0)
-		             mat2[i][0]= mat2[i][1];
+                     attr.mat2[i][0]= attr.mat2[i][1];
 		         		         
-		         if (i==0 && j<height-1)
-		             mat3[i][j]= mat3[1][j];
-		         else if (j==height-1)
-		             mat3[i][j]=mat3[i][j-1];
+		         if (i==0 && j<attr.height-1)
+                     attr.mat3[i][j]= attr.mat3[1][j];
+		         else if (j==attr.height-1)
+                     attr.mat3[i][j]=attr.mat3[i][j-1];
 		         		         
-		         if (j==0 && i<width-1)
-		             mat4[i][j] = mat4[i][1];
-		         else if(i==width-1)
-		            mat4[i][j]=mat4[i-1][j];
+		         if (j==0 && i<attr.width-1)
+                     attr.mat4[i][j] = attr.mat4[i][1];
+		         else if(i==attr.width-1)
+                     attr.mat4[i][j]=attr.mat4[i-1][j];
 			}
-			mat2[0][0]=mat2[0][1];
+              attr.mat2[0][0]=attr.mat2[0][1];
 		  }
         	 
-		 for (int i=0;i<width;i++)
+		 for (int i=0;i<attr.width;i++)
 		 {
-			 for(int j=0;j<height;j++)
+			 for(int j=0;j<attr.height;j++)
 			 {
-		      Dp= mat1[i][j]+mat2[i][j] ;
-		      Dm= mat3[i][j]+mat4[i][j] ;
-		      mata[i][j]= ((Dp-Dm)/4);
+		      Dp= attr.mat1[i][j]+attr.mat2[i][j] ;
+		      Dm= attr.mat3[i][j]+attr.mat4[i][j] ;
+                 attr.mata[i][j]= ((Dp-Dm)/4);
 			 }
 		 }
 			 
-		 return mata;
+		 return attr.mata;
 		
 	}
 
@@ -354,5 +317,31 @@ public class NoiseReduction extends MarvinAbstractImagePlugin {
 		else              return a;
 	}
 	
-	
+	private class Attributes{
+        public double mat1[][],mat2[][],mat3[][],mat4[][],mata[][];
+        public double img_x[][],img_y[][],img_xx[][],img_yy[][],img_xy[][];
+        public double matr[][],matg[][],matb[][];
+        public double img_org[][];
+        public int width;
+        public int height;
+        public Attributes(MarvinImage image){
+            width=image.getWidth();
+            height=image.getHeight();
+
+            mat1=new double[width][height];
+            mat2=new double[width][height];
+            mat4=new double[width][height];
+            mata=new double[width][height];
+
+            img_x=new double[width][height];
+            img_y=new double[width][height];
+            img_xx=new double[width][height];
+            img_yy=new double[width][height];
+            img_xy=new double[width][height];
+
+            matr=new double[width][height];
+            matg=new double[width][height];
+            matb=new double[width][height];
+        }
+    }
 }

@@ -22,36 +22,15 @@ import marvin.util.MarvinAttributes;
  * @author Gabriel Ambr�sio Archanjo
  */
 public class Scale extends MarvinAbstractImagePlugin{
-	
-	private MarvinAttributesPanel	attributesPanel;
-	private int 					width;
-	private int 					height;
-	private int 					newWidth;
-	private int 					newHeight;
-	
-	
-	private MarvinAttributes 	attributes;
-	
+	public static final String ATTR_NEW_WIDTH = "newWidth";
+	public static final String ATTR_NEW_HEIGHT = "newHeight";
 	public void load(){
-		attributes = getAttributes();
-		newWidth = 0;
-		newHeight = 0;
-		setAttribute("newWidth", newWidth);
-		setAttribute("newHeight", newHeight);
+		setAttribute(ATTR_NEW_WIDTH, 0);
+		setAttribute(ATTR_NEW_HEIGHT, 0);
 	}
 	
 	public MarvinAttributesPanel getAttributesPanel(){
-		
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("lblWidth", "Width:");
-			attributesPanel.addTextField("txtWidth", "newWidth", attributes);
-			attributesPanel.newComponentRow();
-			attributesPanel.addLabel("lblHeight", "Height:");
-			attributesPanel.addTextField("txtHeight", "newHeight", attributes);
-		}
-		return attributesPanel;
-		
+		return null;
 	}
 			
 	public void process
@@ -63,17 +42,20 @@ public class Scale extends MarvinAbstractImagePlugin{
 		MarvinImageMask a_mask, 
 		boolean previewMode
 	){
-		
+		int 					width;
+		int 					height;
+		int 					newWidth;
+		int 					newHeight;
 		if(!previewMode){
 			width = a_imageIn.getWidth();
 			height = a_imageIn.getHeight();
-			newWidth = (Integer)getAttribute("newWidth");
-			newHeight = (Integer)getAttribute("newHeight");
+			newWidth = (Integer)getAttribute(ATTR_NEW_WIDTH, a_attributesIn);
+			newHeight = (Integer)getAttribute(ATTR_NEW_HEIGHT, a_attributesIn);
 			
 			a_imageOut.setDimension(newWidth, newHeight);
 			
-		    int x_ratio = (int)((width<<16)/newWidth) ;
-		    int y_ratio = (int)((height<<16)/newHeight) ;
+		    int x_ratio = (width<<16)/newWidth;
+		    int y_ratio = (height<<16)/newHeight;
 		    int x2, y2 ;
 		    for (int i=0;i<newHeight;i++) {
 		        for (int j=0;j<newWidth;j++) {

@@ -22,47 +22,50 @@ import marvin.util.MarvinAttributes;
  * @author Gabriel Ambr�sio Archanjo
  */
 public class JuliaSet extends MarvinAbstractImagePlugin{
-
-	private final static String MODEL_0 = "Model 0";
-	private final static String MODEL_1 = "Model 1";
-	
-	private MarvinAttributesPanel	attributesPanel;
-	private MarvinAttributes 		attributes;
-	private int						colorModel;
-	int width;
-	int height;
+    public static final String ATTR_C_REAL = "cReal";
+    public static final String ATTR_C_IMAG = "cImag";
+    public static final String ATTR_ZOOM = "zoom";
+    public static final String ATTR_X_CENTER = "xCenter";
+    public static final String ATTR_Y_CENTER = "yCenter";
+    public static final String ATTR_ITERATIONS = "iterations";
+    public static final String ATTR_COLOR_MODEL = "colorModel";
+	public final static String MODEL_0 = "Model 0";
+    public final static String MODEL_1 = "Model 1";
 	
 	public void load() {
-		attributes = getAttributes();
-		setAttribute("cReal", -0.4);
-		setAttribute("cImag", 0.6);
-		setAttribute("zoom", 1.0);
-		setAttribute("xCenter", 0.0);
-		setAttribute("yCenter", 0.0);
-		setAttribute("iterations", 500);
-		setAttribute("colorModel", MODEL_0);
+		setAttribute(ATTR_C_REAL, -0.4);
+		setAttribute(ATTR_C_IMAG, 0.6);
+		setAttribute(ATTR_ZOOM, 1.0);
+		setAttribute(ATTR_X_CENTER, 0.0);
+		setAttribute(ATTR_Y_CENTER, 0.0);
+		setAttribute(ATTR_ITERATIONS, 500);
+		setAttribute(ATTR_COLOR_MODEL, MODEL_0);
 	}
 
 	public void process
 	(
 		MarvinImage imageIn, 
-		MarvinImage imageOut, 
-		MarvinAttributes out2,
+		MarvinImage imageOut,
+		MarvinAttributes attrIn,
+		MarvinAttributes attrOut,
 		MarvinImageMask a_mask, 
 		boolean previewMode
 	)
 	{
+        int						colorModel;
+        int width;
+        int height;
 		width = imageOut.getWidth();
 		height = imageOut.getHeight();
 		
-		double cRe 		= (Double)getAttribute("cReal");
-		double cIm 		= (Double)getAttribute("cImag");
-		double zoom 	= (Double)getAttribute("zoom");
-		double xc   	= (Double)getAttribute("xCenter");
-		double yc   	= (Double)getAttribute("yCenter");
-		int iterations 	= (Integer)getAttribute("iterations");
+		double cRe 		= (Double)getAttribute(ATTR_C_REAL, attrIn);
+		double cIm 		= (Double)getAttribute(ATTR_C_IMAG, attrIn);
+		double zoom 	= (Double)getAttribute(ATTR_ZOOM, attrIn);
+		double xc   	= (Double)getAttribute(ATTR_X_CENTER, attrIn);
+		double yc   	= (Double)getAttribute(ATTR_Y_CENTER, attrIn);
+		int iterations 	= (Integer)getAttribute(ATTR_ITERATIONS, attrIn);
 		
-		if(((String)getAttribute("colorModel")).equals(MODEL_0)){
+		if(MODEL_0.equals(getAttribute(ATTR_COLOR_MODEL, attrIn))){
 			colorModel = 0;
 		} else{
 			colorModel = 1;
@@ -129,39 +132,8 @@ public class JuliaSet extends MarvinAbstractImagePlugin{
 	        return blue + (green << 8) + (red << 16);
 		}
 
-	 MarvinFilterWindow filterWindow;
-	 
 	 public MarvinAttributesPanel getAttributesPanel(){
-			if(attributesPanel == null){
-				attributesPanel = new MarvinAttributesPanel();
-				attributesPanel.addLabel("lblCReal", "c Real:");
-				attributesPanel.addTextField("txtCReal", "cReal", attributes);
-				attributesPanel.newComponentRow();
-				
-				attributesPanel.addLabel("lblCImaginary", "c Imaginary:");
-				attributesPanel.addTextField("txtCImaginary", "cImag", attributes);
-				attributesPanel.newComponentRow();
-				
-				attributesPanel.addLabel("lblXCenter", "X Center:");
-				attributesPanel.addTextField("txtXCenter", "xCenter", attributes);
-				attributesPanel.newComponentRow();
-				
-				attributesPanel.addLabel("lblYCenter", "Y Center:");
-				attributesPanel.addTextField("txtYCenter", "yCenter", attributes);
-				attributesPanel.newComponentRow();
-				
-				attributesPanel.addLabel("lblZoom", "Zoom:");
-				attributesPanel.addTextField("txtZoom", "zoom", attributes);
-				attributesPanel.newComponentRow();
-				
-				attributesPanel.addLabel("lblIterations", "Iterations:");
-				attributesPanel.addTextField("txtIterations", "iterations", attributes);
-				attributesPanel.newComponentRow();
-				
-				attributesPanel.addLabel("lblColorModel", "Color Model:");
-				attributesPanel.addComboBox("combColorModel", "colorModel", new Object[]{MODEL_0, MODEL_1}, attributes);
-			}
-			return attributesPanel;
+			return null;
 		}
 
 }

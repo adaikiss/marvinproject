@@ -14,7 +14,7 @@ package org.marvinproject.image.render.lindenmayer;
 import java.util.HashMap;
 
 /**
- * @author Gabriel Ambrósio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class Grammar {
 	HashMap<String, String> rules;

@@ -38,7 +38,7 @@ public class ColorQuantization extends MarvinAbstractImagePlugin{
 	}
 
 	@Override
-	public void process(MarvinImage imgIn, MarvinImage imgOut,
+	public void process(MarvinImage imgIn, MarvinImage imgOut, MarvinAttributes attrIn,
 			MarvinAttributes attrOut, MarvinImageMask mask, boolean previewMode) {
 		// TODO Auto-generated method stub
 		

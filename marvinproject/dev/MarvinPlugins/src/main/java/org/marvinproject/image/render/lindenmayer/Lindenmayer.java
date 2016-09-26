@@ -22,14 +22,12 @@ import marvin.util.MarvinAttributes;
 * @author Gabriel Ambr�sio Archhanjo
 */
 public class Lindenmayer extends MarvinAbstractImagePlugin{
+	public static final String ATTR_ROTATION_ANGLE = "rotationAngle";
+	public static final String ATTR_INITIAL_ANGLE = "initialAngle";
+	public static final String ATTR_ITERATIONS = "iterations";
+	public static final String ATTR_RULES = "rules";
+	public static final String ATTR_INITIAL_TEXT = "initialText";
 
-	private MarvinAttributesPanel	attributesPanel;
-	private MarvinAttributes 		attributes;
-	
-	private Grammar 		grammar;
-	private TurtleGraphics	turtle;
-	private String			startText;
-	
 	private String RULES =		"start->G\n" + 	
 								"G->F[-G][+G]FG\n"+
 								"F->FF\n";
@@ -37,15 +35,11 @@ public class Lindenmayer extends MarvinAbstractImagePlugin{
 	
 	@Override
 	public void load() {
-		attributes = getAttributes();
-		setAttribute("rotationAngle", 25.7);
-		setAttribute("initialAngle", 90.0);
-		setAttribute("iterations", 9);
-		setAttribute("rules", RULES);
-		setAttribute("initialText", "G");
-		
-		grammar = new Grammar();
-		turtle = new TurtleGraphics();
+		setAttribute(ATTR_ROTATION_ANGLE, 25.7);
+		setAttribute(ATTR_INITIAL_ANGLE, 90.0);
+		setAttribute(ATTR_ITERATIONS, 9);
+		setAttribute(ATTR_RULES, RULES);
+		setAttribute(ATTR_INITIAL_TEXT, "G");
 	}
 
 	@Override
@@ -53,27 +47,41 @@ public class Lindenmayer extends MarvinAbstractImagePlugin{
 	(
 		MarvinImage imageIn, 
 		MarvinImage imageOut, 
-		MarvinAttributes out2,
-		MarvinImageMask a_mask, 
+		MarvinAttributes attrIn,
+		MarvinAttributes attrOut,
+		MarvinImageMask a_mask,
 		boolean mode
 	) {
-		
+		Grammar 		grammar;
+		TurtleGraphics	turtle;
+		String			startText;
+        grammar = new Grammar();
+        turtle = new TurtleGraphics();
 		String rules[] = null;
-		String strRules = ((String)(getAttribute("rules")));
+        startText = (String)getAttribute(ATTR_INITIAL_TEXT, attrIn);
+		String strRules = ((String)(getAttribute(ATTR_RULES, attrIn)));
 		if(strRules.contains("\n")){
-			rules = ((String)(getAttribute("rules"))).split("\n");
+			rules = ((String)(getAttribute(ATTR_RULES, attrIn))).split("\n");
 		}
 		else if(strRules.contains("&")){
-			rules = ((String)(getAttribute("rules"))).split("&");
+			rules = ((String)(getAttribute(ATTR_RULES, attrIn))).split("&");
 		}
 		
-		double initialAngle = (Double)getAttribute("initialAngle");
-		double rotationAngle = (Double)getAttribute("rotationAngle");
-		int iterations = (Integer)getAttribute("iterations");
+		double initialAngle = (Double)getAttribute(ATTR_INITIAL_ANGLE, attrIn);
+		double rotationAngle = (Double)getAttribute(ATTR_ROTATION_ANGLE, attrIn);
+		int iterations = (Integer)getAttribute(ATTR_ITERATIONS, attrIn);
 		
 		
 		for(int i=0; i<rules.length; i++){
-			addRule(rules[i]);
+//			addRule(rules[i]);
+            String r[] = rules[i].split("->");
+
+            if(r[0].equals("start")){
+                startText = r[1];
+            }
+            else{
+                grammar.addRule(r[0], r[1]);
+            }
 		}
 		
 		turtle.setStartPosition(0, 0, initialAngle);
@@ -86,34 +94,6 @@ public class Lindenmayer extends MarvinAbstractImagePlugin{
 
 	@Override
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("lblIterations","iterations:");
-			attributesPanel.addTextField("txtIterations","iterations", attributes);
-			attributesPanel.newComponentRow();
-			
-			attributesPanel.addLabel("lblInitialAngle","initialAngle:");
-			attributesPanel.addTextField("txtInitialAngle","initialAngle", attributes);
-			attributesPanel.newComponentRow();
-			
-			attributesPanel.addLabel("lblRotationAngle","rotationAngle:");
-			attributesPanel.addTextField("txtRotationAngle","rotationAngle", attributes);
-			attributesPanel.newComponentRow();
-			
-			attributesPanel.addLabel("lblRules","rules:");
-			attributesPanel.addTextArea("txtRules","rules", 8, 40, attributes);
-		}
-		return attributesPanel;
-	}
-	
-	private void addRule(String rule){
-		String r[] = rule.split("->");
-		
-		if(r[0].equals("start")){
-			startText = r[1];
-		}
-		else{
-			grammar.addRule(r[0], r[1]);
-		}
+		return null;
 	}
 }

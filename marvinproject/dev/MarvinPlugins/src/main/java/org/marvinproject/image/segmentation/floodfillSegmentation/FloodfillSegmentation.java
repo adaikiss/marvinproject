@@ -6,18 +6,17 @@ import marvin.image.MarvinImageMask;
 import marvin.image.MarvinSegment;
 import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.plugin.MarvinImagePlugin;
+import marvin.plugin.MarvinPluginFactory;
 import marvin.util.MarvinAttributes;
-import marvin.util.MarvinPluginLoader;
-
-import static marvin.MarvinPluginCollection.*;
+import org.marvinproject.image.fill.boundaryFill.BoundaryFill;
 
 
 public class FloodfillSegmentation extends MarvinAbstractImagePlugin{
-
+    public static final String OUTPUT_SEGMENTS = "segments";
 	private MarvinImagePlugin floodfill;
 	
 	public void load(){
-		floodfill   = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.fill.boundaryFill");
+		floodfill   = MarvinPluginFactory.get(BoundaryFill.class);
 	}
 	
 	public void process
@@ -31,7 +30,7 @@ public class FloodfillSegmentation extends MarvinAbstractImagePlugin{
 	)
 	{
 		if(attributesOut != null){
-			attributesOut.set("segments", floodfillSegmentation(imageIn));
+			attributesOut.set(OUTPUT_SEGMENTS, floodfillSegmentation(imageIn));
 		}
 	}
 	
@@ -46,11 +45,11 @@ public class FloodfillSegmentation extends MarvinAbstractImagePlugin{
 				int color = fillBuffer.getIntColor(x, y);
 				
 				if((color & 0x00FFFFFF) == 0){
-					floodfill.setAttribute("x", x);
-					floodfill.setAttribute("y", y);
-					floodfill.setAttribute("color", 0xFF000000 | (currentColor++));
-					floodfill.process(image, fillBuffer);
-					
+					MarvinAttributes attr = new MarvinAttributes();
+					attr.set(BoundaryFill.ATTR_X, x);
+					attr.set(BoundaryFill.ATTR_Y, y);
+					attr.set(BoundaryFill.ATTR_COLOR, 0xFF000000 | (currentColor++));
+					floodfill.process(image, fillBuffer, attr, null);
 				}
 			}
 		}

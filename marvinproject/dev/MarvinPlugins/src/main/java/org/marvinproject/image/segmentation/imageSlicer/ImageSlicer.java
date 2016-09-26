@@ -20,10 +20,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import marvin.gui.MarvinAttributesPanel;
-import marvin.gui.MarvinFilterWindow;
 import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
-import marvin.performance.MarvinPerformanceMeter;
 import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 import marvin.util.MarvinErrorHandler;
@@ -36,17 +34,11 @@ import marvin.util.MarvinFileChooser;
  * @version 1.1 05/11/2008
  */
 public class ImageSlicer extends MarvinAbstractImagePlugin {
-	
-	private MarvinAttributesPanel	attributesPanel;
-	private MarvinAttributes 		attributes;
-	private MarvinPerformanceMeter 	performanceMeter;
-	private DecimalFormat df = new DecimalFormat("000");
-	
+    public static final String ATTR_LINES = "lines";
+    public static final String ATTR_COLS = "cols";
 	public void load() {
-		attributes = getAttributes();
-		setAttribute("txtLines", 1);
-		setAttribute("txtCols", 1);
-		performanceMeter = new MarvinPerformanceMeter();
+		setAttribute(ATTR_LINES, 1);
+		setAttribute(ATTR_COLS, 1);
 	}
 
 	public void process
@@ -65,8 +57,8 @@ public class ImageSlicer extends MarvinAbstractImagePlugin {
 		col = line = conti = contx = conty = 0;
 		
 		//Get the values from objects...
-		lines = Integer.parseInt(getAttribute("txtLines").toString());
-		cols = Integer.parseInt(getAttribute("txtCols").toString());
+		lines = Integer.parseInt(getAttribute(ATTR_LINES, a_attributesIn).toString());
+		cols = Integer.parseInt(getAttribute(ATTR_COLS, a_attributesIn).toString());
 		
 		 
 		
@@ -78,7 +70,7 @@ public class ImageSlicer extends MarvinAbstractImagePlugin {
 		limitl = (height/lines);
 		limitc = (width/cols); 
 				
-		if(a_previewMode != true){
+		if(!a_previewMode){
 			//Creates the list to store the marvin Images of the sliced image...
 			List<MarvinImage> listaImgs = new ArrayList<MarvinImage>();
 			
@@ -88,7 +80,6 @@ public class ImageSlicer extends MarvinAbstractImagePlugin {
 			}
 
 			//Creates the Performance Meter...
-			performanceMeter.enableProgressBar("Image Slicer", (lines*cols*limitc*limitl));
 			int x,y=0;
 			for(line=0;line<lines;line++){
 				for(col=0;col<cols;col++){
@@ -100,11 +91,9 @@ public class ImageSlicer extends MarvinAbstractImagePlugin {
 
 							listaImgs.get(conti).setIntColor(conty, contx, r, g, b);
 							conty++;
-							performanceMeter.incProgressBar(limitc);
 						}
 						conty=0;
 						contx++;
-						performanceMeter.incProgressBar(limitl);
 					}
 					listaImgs.get(conti).update();
 					contx=conty=0;
@@ -113,10 +102,10 @@ public class ImageSlicer extends MarvinAbstractImagePlugin {
 
 				contx=conty=0;
 			}
-			performanceMeter.finish();
 			//Sets the path to save the files...
 			String arq = "";
 			int foto = 0;
+            DecimalFormat df = new DecimalFormat("000");
 			try {
 				arq = MarvinFileChooser.select(null, false, MarvinFileChooser.SAVE_DIALOG);
 				//Save the generated Images...
@@ -142,7 +131,6 @@ public class ImageSlicer extends MarvinAbstractImagePlugin {
 			a_imageOut.setIntColorArray(a_imageIn.getIntColorArray());
 		}else{
 			//Print the limits of the image
-			performanceMeter.enableProgressBar("Image Slicer", (lines*cols*limitc*limitl));
 			for (int y = 0; y < a_imageIn.getHeight(); y++) {
 				for (int x = 0; x < a_imageIn.getWidth(); x++) {
 					if(((x!=0)&&(x%limitc == 0))||((y!=0)&&(y%limitl == 0))){
@@ -152,27 +140,12 @@ public class ImageSlicer extends MarvinAbstractImagePlugin {
 						a_imageOut.setIntColor(x, y, a_imageIn.getIntColor(x,y));
 					}
 				}	
-				performanceMeter.incProgressBar(width-2);
 			}
-			performanceMeter.finish();
 		}
 		
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			//Create the objects to set the number of lines and columns to slice the image...
-			attributesPanel.addLabel("lblLinhas", "Number of rows:");
-			attributesPanel.addTextField("txtLines", "txtLines", attributes);
-			//attributesPanel.addHorizontalSlider("txtLines", "txtLines", 1, 10, 2, attributes);
-			attributesPanel.newComponentRow();
-			
-			attributesPanel.addLabel("lblCols", "Number of columns:");
-			attributesPanel.addTextField("txtCols", "txtCols", attributes);
-			//attributesPanel.addHorizontalSlider("txtCols", "txtCols", 1, 10, 2, attributes);
-			attributesPanel.newComponentRow();
-		}
-		return attributesPanel;
+		return null;
 	}
 }

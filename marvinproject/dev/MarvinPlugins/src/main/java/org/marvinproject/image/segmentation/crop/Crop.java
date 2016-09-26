@@ -19,34 +19,32 @@ import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 
 public class Crop extends MarvinAbstractImagePlugin{
+	/**
+	 * offset x
+	 */
+	public static final String ATTR_X = "x";
+	/**
+	 * offset y
+	 */
+	public static final String ATTR_Y = "y";
+	/**
+	 * crop width
+	 */
+	public static final String ATTR_WIDTH = "width";
+	/**
+	 * crop height
+	 */
+	public static final String ATTR_HEIGHT = "height";
 
-	private MarvinAttributesPanel	attributesPanel;
-	private MarvinAttributes 		attributes;
-	
 	public void load(){
-		attributes = getAttributes();
-		setAttribute("x", 0);
-		setAttribute("y", 0);
-		setAttribute("width", 0);
-		setAttribute("height", 0);
+		setAttribute(ATTR_X, 0);
+		setAttribute(ATTR_Y, 0);
+		setAttribute(ATTR_WIDTH, 0);
+		setAttribute(ATTR_HEIGHT, 0);
 	}
 	
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("lblX", "x:");
-			attributesPanel.addTextField("txtX", "x", attributes);
-			attributesPanel.newComponentRow();
-			attributesPanel.addLabel("lblY", "y:");
-			attributesPanel.addTextField("txtY", "y", attributes);
-			attributesPanel.newComponentRow();
-			attributesPanel.addLabel("lblWidth", "width:");
-			attributesPanel.addTextField("txtWidth", "width", attributes);
-			attributesPanel.newComponentRow();
-			attributesPanel.addLabel("lblHeight", "height:");
-			attributesPanel.addTextField("txtHeight", "height", attributes);
-		}
-		return attributesPanel;
+		return null;
 	}
 	
 	public void process
@@ -59,10 +57,10 @@ public class Crop extends MarvinAbstractImagePlugin{
 		boolean previewMode
 	)
     {
-		int x = (Integer)getAttribute("x");
-		int y = (Integer)getAttribute("y");
-		int width = (Integer)getAttribute("width");
-		int height = (Integer)getAttribute("height");
+		int x = (Integer)getAttribute(ATTR_X, attrIn);
+		int y = (Integer)getAttribute(ATTR_Y, attrIn);
+		int width = (Integer)getAttribute(ATTR_WIDTH, attrIn);
+		int height = (Integer)getAttribute(ATTR_HEIGHT, attrIn);
 		
 		imageOut.setDimension(width, height);
 		

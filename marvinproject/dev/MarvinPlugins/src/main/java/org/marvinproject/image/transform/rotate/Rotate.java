@@ -26,38 +26,28 @@ import marvin.util.MarvinAttributes;
  */
 public class Rotate extends MarvinAbstractImagePlugin
 {
-	private final static String CLOCKWISE90 = "clockwise90";
-	private final static String ACLOCKWISE90 = "anticlockwise90";
-	private final static String OTHER = "Other";
+    public static final String ATTR_ROTATE = "rotate";
+    public static final String ATTR_ROTATE_ANGLE = "rotateAngle";
+	public enum Rotation{
+		ClockWise90,
+		AntiClockWise90,
+        Other
+	}
+	public static final int MAXIMUM_ROTATION_ANGLE = 89;
 
-	private int MaximumRotationAngle = 89;
-
-	private MarvinAttributesPanel	attributesPanel;
-	private MarvinAttributes 		attributes;
 
 	public void load(){
-		attributes = getAttributes();
-		setAttribute("rotate", "angle");
+		setAttribute(ATTR_ROTATE, Rotation.Other);
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("labelRotate", "Options:");
-			attributesPanel.addComboBox("combpRotate", "rotate", new Object[]{CLOCKWISE90, ACLOCKWISE90, OTHER}, attributes);
-			attributesPanel.newComponentRow();
-			
-			attributesPanel.addLabel("lblRotateAngle", "Angle of Rotation");
-			attributesPanel.addHorizontalSlider("sliderRotateAngle", "RotateAngle", -MaximumRotationAngle, MaximumRotationAngle, 0, attributes);
-			attributesPanel.newComponentRow();
-		}
-		return attributesPanel;
+        return null;
 	}
 	
 	/**
 	 * Initiate the rotate process and determine the angle of rotation
-	 * @param MarvinImage - the image to be rotated
-	 * @param boolean - to display a preview
+	 * @param a_imageIn - the image to be rotated
+	 * @param a_previewMode - to display a preview
 	 */
 	public void process
 	(
@@ -78,9 +68,9 @@ public class Rotate extends MarvinAbstractImagePlugin
 		//MarvinImage l_image = (MarvinImage)a_image.clone();
 		
 		//for speed, check if the user wants a simple rotate by 90 degrees
-		String userOption = (String)getAttribute("rotate");
-		setAttribute("rotateTextField", userOption);
-		if(userOption.intern() == CLOCKWISE90.intern())
+		Rotation userOption = (Rotation)getAttribute(ATTR_ROTATE, a_attributesIn);
+//		setAttribute("rotateTextField", userOption);
+		if(userOption == Rotation.ClockWise90)
 		{
 			//this is an image transpose so swap the width and height
 			System.out.println("90clockwise");
@@ -95,7 +85,7 @@ public class Rotate extends MarvinAbstractImagePlugin
 				}
 			}
 		}
-		else if(userOption.intern() == ACLOCKWISE90.intern())
+		else if(userOption == Rotation.AntiClockWise90)
 		{
 			//this is an image transpose so swap the width and height
 			System.out.println("90clockwise");
@@ -112,7 +102,7 @@ public class Rotate extends MarvinAbstractImagePlugin
 		}
 		else
 		{
-			l_rotateAngle = (Integer)getAttribute("RotateAngle");
+			l_rotateAngle = (Integer)getAttribute(ATTR_ROTATE_ANGLE, a_attributesIn);
 			
 			l_rotateAngleRadians = Math.toRadians(l_rotateAngle);
 			rotateImage(a_imageIn, a_imageOut, l_rotateAngleRadians);
@@ -123,9 +113,9 @@ public class Rotate extends MarvinAbstractImagePlugin
 	/**
 	 * Use the information from the original image to interpolate and fill in
 	 * gaps in the rotated image
-	 * @param MarvinImage a_image - the image to be modified
-	 * @param MarvinImage a_originalImage - the image to be used as the source of the interpolation
-	 * @param double a_rotateAngle - the angle of rotation
+	 * @param a_image - the image to be modified
+	 * @param a_originalImage - the image to be used as the source of the interpolation
+	 * @param a_rotateAngle - the angle of rotation
 	 */
 	private void interpolateImage(MarvinImage a_image, MarvinImage a_originalImage, int[][][] a_LookUpArray, double a_rotateAngle, int a_initialisationValue)
 	{
@@ -170,8 +160,8 @@ public class Rotate extends MarvinAbstractImagePlugin
 	
 	/**
 	 * Rotate an image by a specified angle.
-	 * @param a_image - the image to be rotated
-	 * @param a_rotateAngle - the angle (in Radians) to rotate
+	 * @param a_imageIn - the image to be rotated
+	 * @param a_rotateAngleRads - the angle (in Radians) to rotate
 	 */
 	private void rotateImage(MarvinImage a_imageIn, MarvinImage a_imageOut, double a_rotateAngleRads)
 	{

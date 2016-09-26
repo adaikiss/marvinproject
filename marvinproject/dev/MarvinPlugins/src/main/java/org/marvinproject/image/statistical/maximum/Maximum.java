@@ -45,7 +45,7 @@ public class Maximum extends MarvinAbstractImagePlugin {
 		//MarvinImage img = new MarvinImage(a_image.getWidth(),a_image.getHeight());
 
 		
-		int l_size = (Integer)getAttribute(ATTR_SIZE);
+		int l_size = (Integer)getAttribute(ATTR_SIZE, a_attributesIn);
 		int l_totalRed = 0;
 		int l_totalGreen = 0;
 		int l_totalBlue = 0;

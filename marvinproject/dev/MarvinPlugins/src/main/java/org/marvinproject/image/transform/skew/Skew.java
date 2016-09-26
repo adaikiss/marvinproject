@@ -26,31 +26,21 @@ import marvin.util.MarvinAttributes;
  */
 public class Skew extends MarvinAbstractImagePlugin
 {
-	private final static String HORIZONTAL = "Horizontal";
-	private final static String VERTICAL = "Vertical";
-	private int SELECTEDANGLE = 0;
-
-	private MarvinAttributesPanel	attributesPanel;
-	MarvinAttributes 				attributes;
+	public static final String ATTR_SKEW = "skew";
+    public static final String ATTR_SKEW_ANGLE = "skewAngle";
+//	public static final String ATTR_SELECTED = "selected";
+    public enum Type{
+        Horizontal,
+        Vertical
+    }
 
 	public void load(){
-		attributes = getAttributes();
-		setAttribute("skew", "horizontal");
-		setAttribute("selected", String.valueOf(SELECTEDANGLE));
+		setAttribute(ATTR_SKEW, Type.Horizontal);
+//		setAttribute(ATTR_SELECTED, 0);
 	}
 
 	public MarvinAttributesPanel getAttributesPanel(){
-		if(attributesPanel == null){
-			attributesPanel = new MarvinAttributesPanel();
-			attributesPanel.addLabel("labelSkew", "Skew:");
-			attributesPanel.addComboBox("combpSkew", "skew", new Object[]{HORIZONTAL, VERTICAL}, attributes);
-			attributesPanel.newComponentRow();
-			
-			attributesPanel.addLabel("lblSkewAngle", "SkewAngle");
-			attributesPanel.addHorizontalSlider("sliderSkewAngle", "SkewAngle", -89, 89, 0, attributes);
-			attributesPanel.newComponentRow();
-		}
-		return attributesPanel;
+		return null;
 	}
 	
 	/**
@@ -58,8 +48,8 @@ public class Skew extends MarvinAbstractImagePlugin
 	 * Determines the angle to skew and if the user wants
 	 * a horizontal or vertical skew.
 	 * 
-	 * @param MarvinImage - the image to be skewed
-	 * @param boolean - if a preview is being performed
+	 * @param a_imageIn - the image to be skewed
+	 * @param a_previewMode - if a preview is being performed
 	 * @return - void
 	 */
 	public void process
@@ -73,12 +63,12 @@ public class Skew extends MarvinAbstractImagePlugin
 	)
 	{
 		//find the desired direction
-		String l_operation = (String)getAttribute("skew");
+		Type l_operation = (Type)getAttribute(ATTR_SKEW, a_attributesIn);
 		//find the desired angle and convert from degrees to rads
-		int s_angle = (Integer)getAttribute("SkewAngle");
-		double s_angle_rad = (double)(Math.toRadians(s_angle));
+		int s_angle = (Integer)getAttribute(ATTR_SKEW_ANGLE, a_attributesIn);
+		double s_angle_rad = Math.toRadians(s_angle);
 		
-		if(l_operation.equals(HORIZONTAL))
+		if(l_operation == Type.Horizontal)
 		{
 			skewHorizontal(a_imageIn, a_imageOut, s_angle_rad);
 		}
@@ -91,8 +81,8 @@ public class Skew extends MarvinAbstractImagePlugin
 	/**
 	 * Perform a horizontal skew of the input image (a_image). The maximum skew in each direction is 89 degrees.
 	 * 
-	 * @param a_image The input image to be skewed.
-	 * @param skew_angle_rad The amount of skew to be performed.
+	 * @param a_imageIn The input image to be skewed.
+	 * @param a_skewAngleRad The amount of skew to be performed.
 	 * @return void
 	 * @see MarvinImage
 	 */
@@ -160,8 +150,8 @@ public class Skew extends MarvinAbstractImagePlugin
 	
 	/**
 	 * Perform a vertical skew of the input image
-	 * @param MarvinImage a_image
-	 * @param double skew_angle_rad
+	 * @param a_imageIn
+	 * @param a_skewAngleRad
 	 * @return void
 	 * @see MarvinImage
 	 */

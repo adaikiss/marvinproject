@@ -11,27 +11,28 @@ https://groups.google.com/forum/#!forum/marvin-project
 
 package org.marvinproject.image.render.text;
 
-import java.util.HashMap;
-
 import marvin.gui.MarvinAttributesPanel;
 import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
 import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 
-public class Text extends MarvinAbstractImagePlugin{
+import java.util.HashMap;
 
-	private MarvinAttributes attributes;
+public class Text extends MarvinAbstractImagePlugin{
+	public static final String ATTR_X = "x";
+	public static final String ATTR_Y = "y";
+	public static final String ATTR_COLOR = "color";
+	public static final String ATTR_TEXT = "text";
+	public static final String ATTR_FONT_FILE = "fontFile";
 	private HashMap<Character, CharacterDescription> chars;
 	
 	@Override
 	public void load() {
-		
-		attributes = getAttributes();
-		setAttribute("x", 0);
-		setAttribute("y", 0);
-		setAttribute("color", 0);
-		setAttribute("text", "");
+		setAttribute(ATTR_X, 0);
+		setAttribute(ATTR_Y, 0);
+		setAttribute(ATTR_COLOR, 0);
+		setAttribute(ATTR_TEXT, "");
 		
 		
 		
@@ -82,16 +83,17 @@ public class Text extends MarvinAbstractImagePlugin{
 	(
 		MarvinImage imageIn, 
 		MarvinImage imageOut, 
+		MarvinAttributes attrIn,
 		MarvinAttributes attrOut,
-		MarvinImageMask mask, 
+		MarvinImageMask mask,
 		boolean mode
 	)
 	{
-		MarvinImage font = (MarvinImage)getAttribute("fontFile");
-		String text = (String)getAttribute("text");
-		int x = (Integer)getAttribute("x");
-		int y = (Integer)getAttribute("y");
-		int color = (Integer)getAttribute("color");
+		MarvinImage font = (MarvinImage)getAttribute(ATTR_FONT_FILE, attrIn);
+		String text = (String)getAttribute(ATTR_TEXT, attrIn);
+		int x = (Integer)getAttribute(ATTR_X, attrIn);
+		int y = (Integer)getAttribute(ATTR_Y, attrIn);
+		int color = (Integer)getAttribute(ATTR_COLOR, attrIn);
 		CharacterDescription charDesc;
 		
 		for(int i=0; i<text.length(); i++){

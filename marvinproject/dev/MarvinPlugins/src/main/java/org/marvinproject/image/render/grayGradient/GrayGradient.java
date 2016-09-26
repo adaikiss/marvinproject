@@ -58,9 +58,12 @@ public class GrayGradient extends MarvinAbstractImagePlugin
 		else{
 			factor = 255/a_imageIn.getWidth();
 		}
-
+        boolean[][] l_arrMask = a_mask.getMaskArray();
 		for (int x = 0; x < a_imageIn.getWidth(); x++) {
 			for (int y = 0; y < a_imageIn.getHeight(); y++) {
+                if(l_arrMask != null && !l_arrMask[x][y]){
+                    continue;
+                }
 				try{
 					a_imageOut.setIntColor(x,y,a_imageIn.getAlphaComponent(x,y), r,g,b);
 				}

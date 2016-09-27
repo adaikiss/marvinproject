@@ -22,7 +22,7 @@ import marvin.util.MarvinAttributes;
 import org.marvinproject.image.convolution.Convolution;
 
 /**
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class Prewitt extends MarvinAbstractImagePlugin{
 	public static final String ATTR_INTENSITY = "intensity";

@@ -24,11 +24,11 @@ import marvin.util.MarvinAttributes;
  * used in this filter for degrade color selection.
  * 
  * @version 1.0 02/28/2008
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 
 /**
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class GrayGradient extends MarvinAbstractImagePlugin
 {

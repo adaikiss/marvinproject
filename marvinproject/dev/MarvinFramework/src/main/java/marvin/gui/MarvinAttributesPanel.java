@@ -163,7 +163,7 @@ public class MarvinAttributesPanel extends Box{
 	
 	/**
 	 * Add ComboBox
-	 * @param id			component´s id.
+	 * @param id			component's id.
 	 * @param attrID		attribute id.
 	 * @param items			items array.
 	 * @param attr			MarvinAttributes object.
@@ -272,7 +272,7 @@ public class MarvinAttributesPanel extends Box{
 	}
 	
 	/**
-	 * Update the attributes´ value based on the associated components.
+	 * Update the attributesï¿½ value based on the associated components.
 	 */
 	public void applyValues(){
 		MarvinPluginWindowComponent filterComp;
@@ -287,8 +287,8 @@ public class MarvinAttributesPanel extends Box{
 
 	/**
 	 * Converts a string to the attribute type.
-	 * @param value		attribute´s value.
-	 * @param type		attribute´s type.
+	 * @param value		attributeï¿½s value.
+	 * @param type		attributeï¿½s type.
 	 * @return value as the specified type.
 	 */
 	public Object stringToType(String value, Object type){

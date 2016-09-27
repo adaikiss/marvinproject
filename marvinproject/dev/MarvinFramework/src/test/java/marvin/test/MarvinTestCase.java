@@ -13,13 +13,13 @@ package marvin.test;
 
 import java.util.Arrays;
 
-import junit.framework.TestCase;
 import marvin.image.MarvinImage;
 import marvin.util.MarvinAttributes;
 
+import static org.junit.Assert.fail;
 
 
-public class MarvinTestCase extends TestCase {
+public class MarvinTestCase {
 
 	// Errors
 	private final static String IMAGES_NOT_EQUAL 		= "The images are different and should be equal.";
@@ -31,6 +31,7 @@ public class MarvinTestCase extends TestCase {
 	 * @param imageA image to be compared.
 	 * @param imageB image to be compared.
 	 */
+	@org.junit.Test
 	public void assertEquals(MarvinImage imageA, MarvinImage imageB){
 		if(imageA.getWidth() != imageB.getWidth() || imageA.getHeight() != imageB.getHeight()){
 			fail(IMAGES_NOT_EQUAL);

@@ -19,7 +19,7 @@ import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 
 /**
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class JuliaSet extends MarvinAbstractImagePlugin{
     public static final String ATTR_C_REAL = "cReal";

@@ -15,16 +15,18 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 import marvin.image.MarvinImage;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacv.*;
 
-import com.googlecode.javacv.FrameGrabber;
-import com.googlecode.javacv.OpenCVFrameGrabber;
-import com.googlecode.javacv.VideoInputFrameGrabber;
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
+//import com.googlecode.javacv.FrameGrabber;
+//import com.googlecode.javacv.OpenCVFrameGrabber;
+//import com.googlecode.javacv.VideoInputFrameGrabber;
+//import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
 public class MarvinJavaCVAdapter implements MarvinVideoInterface{
 	
-	private FrameGrabber	grabber;
-	private IplImage		image;
+	private FrameGrabber grabber;
+	private opencv_core.IplImage image;
 	private int				width;
 	private int				height;
 	private boolean			connected;
@@ -70,7 +72,7 @@ public class MarvinJavaCVAdapter implements MarvinVideoInterface{
 			grabber.setImageWidth(width);
 			grabber.setImageHeight(height);
 			grabber.start();
-			BufferedImage bufImage = grabber.grab().getBufferedImage();
+			BufferedImage bufImage = new Java2DFrameConverter().getBufferedImage(grabber.grab());
 			this.width = bufImage.getWidth();
 			this.height = bufImage.getHeight();
 			marvinImage = new MarvinImage(width, height);
@@ -111,7 +113,7 @@ public class MarvinJavaCVAdapter implements MarvinVideoInterface{
 			try
 			{
 				if(mode == MODE.DEVICE || grabber.getFrameNumber() < grabber.getLengthInFrames()-1){
-					 image=grabber.grab();
+					 image= new OpenCVFrameConverter.ToIplImage().convertToIplImage(grabber.grab());
 					 convertToIntArray(image, intArray);
 					 marvinImage.setIntColorArray(intArray);
 					 return marvinImage;
@@ -124,7 +126,7 @@ public class MarvinJavaCVAdapter implements MarvinVideoInterface{
 		return null;
 	}
 	
-	private void convertToIntArray(IplImage img, int[] arr){
+	private void convertToIntArray(opencv_core.IplImage img, int[] arr){
 		ByteBuffer buffer = img.getByteBuffer();
 		for(int ii=0, bi=0; bi<buffer.limit()-3; ii++, bi+=3){
 			arr[ii] = 0xFF000000 + (buffer.get(bi+2) << 16) + (buffer.get(bi+1) << 8) + buffer.get(bi);
@@ -150,6 +152,4 @@ public class MarvinJavaCVAdapter implements MarvinVideoInterface{
 			}
 		}
 	}
-	
-	
 }

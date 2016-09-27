@@ -52,8 +52,8 @@ public class MarvinPluginWindowComponent
 	}
 
 	/**
-	 * Returns the component´s ID.
-	 * @return the component´s ID
+	 * Returns the component's ID.
+	 * @return the component's ID
 	 */
 	public String getID(){
 		return id;
@@ -61,14 +61,14 @@ public class MarvinPluginWindowComponent
 
 	/**
 	 * Returns the ID of the attribute associated with the component.
-	 * @return attribute´s ID.
+	 * @return attributeï¿½s ID.
 	 */
 	public String getAttributeID(){
 		return attributeID;
 	}
 
 	/**
-	 * Returns Atribute object´s reference.
+	 * Returns Atribute object's reference.
 	 * @return MarvinAttribute reference.
 	 */
 	public MarvinAttributes getAttributes(){
@@ -85,7 +85,7 @@ public class MarvinPluginWindowComponent
 
 	/**
 	 * Returns the type of the component.
-	 * @return the component´s type.
+	 * @return the component's type.
 	 */
 	public ComponentType getType(){
 		return type;

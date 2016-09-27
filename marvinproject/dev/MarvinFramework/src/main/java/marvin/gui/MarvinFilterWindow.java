@@ -26,6 +26,7 @@ import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
 import marvin.plugin.MarvinImagePlugin;
 import marvin.plugin.MarvinPlugin;
+import marvin.util.MarvinAttributes;
 
 /**
  * Generic Window for filters. This window includes thumbnail, preview and reset support.
@@ -44,7 +45,8 @@ public class MarvinFilterWindow extends MarvinPluginWindow
 	MarvinImage 			imageThumbnail;
 	MarvinImage 			imageResetBuffer;
 	MarvinImage				imageOut;
-	MarvinImagePlugin 		plugin;	
+	MarvinImagePlugin 		plugin;
+	MarvinAttributes		attrIn;
 
 	// ActionHandler
 	protected ActionHandler actionHandler;
@@ -55,7 +57,7 @@ public class MarvinFilterWindow extends MarvinPluginWindow
 	 * @param width width
 	 * @param height height
 	 * @param ip {@link MarvinImagePanel}
-	 * @param plg {@link MarvinPlugin}
+	 * @param filter {@link MarvinPlugin}
 	 */
 	public MarvinFilterWindow
 	(
@@ -170,7 +172,7 @@ public class MarvinFilterWindow extends MarvinPluginWindow
 			//marvinApplication.getPerformanceMeter().disable();
 			imageThumbnail = imageResetBuffer.clone();
 			MarvinImage imgOut = new MarvinImage(imageThumbnail.getWidth(), imageThumbnail.getHeight());
-			plugin.process(imageThumbnail, imgOut, null, MarvinImageMask.NULL_MASK, true);
+			plugin.process(imageThumbnail, imgOut, attrIn, null, MarvinImageMask.NULL_MASK, true);
 			imgOut.update();
 			imageThumbnail = imgOut.clone();
 			//marvinApplication.getPerformanceMeter().enable();
@@ -195,7 +197,7 @@ public class MarvinFilterWindow extends MarvinPluginWindow
 	 */
 	public void apply(){		
 		dispose();
-		plugin.process(imagePanel.getImage(), imageOut, null, MarvinImageMask.NULL_MASK, false);
+		plugin.process(imagePanel.getImage(), imageOut, attrIn, null, MarvinImageMask.NULL_MASK, false);
 		
 		if(imagePanel.isHistoryEnabled()){
 			imagePanel.getHistory().addEntry(plugin.getClass().getSimpleName(), imageOut, plugin.getAttributes());

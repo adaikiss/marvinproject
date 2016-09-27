@@ -25,7 +25,7 @@ import org.marvinproject.image.color.grayScale.GrayScale;
 
 /**
  * Halftone dithering implementation.
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  * @version 1.0 02/28/2008
  */
 public class Dithering extends MarvinAbstractImagePlugin

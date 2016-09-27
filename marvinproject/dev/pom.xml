@@ -4,9 +4,9 @@
 
     <groupId>marvin</groupId>
     <artifactId>marvin</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <version>1.5.3</version>
-    <name>Marvin Framework</name>
+    <name>Marvin Project</name>
     <url></url>
 
     <properties>
@@ -36,5 +36,9 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>MarvinFramework</module>
+        <module>MarvinPlugins</module>
+    </modules>
 </project>
 

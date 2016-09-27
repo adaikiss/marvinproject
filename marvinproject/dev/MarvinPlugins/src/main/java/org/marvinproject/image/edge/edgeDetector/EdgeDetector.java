@@ -23,7 +23,7 @@ import marvin.util.MarvinAttributes;
 
 /**
  * Edge detection plug-in. Reference: {@link http://www.cs.princeton.edu/introcs/31datatype/EdgeDetector.java.html}
- * @authors Danilo Rosetto Mu�oz, Ivan Francisco Coutinho Costa
+ * @authors Danilo Rosetto Muloz, Ivan Francisco Coutinho Costa
  * @version 1.0 02/28/2008
  */
 

@@ -13,7 +13,7 @@ package marvin.video;
 
 import marvin.image.MarvinImage;
 
-import com.googlecode.javacv.FrameGrabber;
+//import com.googlecode.javacv.FrameGrabber;
 
 public interface MarvinVideoInterface {
 

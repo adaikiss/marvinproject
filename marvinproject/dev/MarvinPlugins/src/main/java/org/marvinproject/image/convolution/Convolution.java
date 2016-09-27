@@ -18,7 +18,7 @@ import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 
 /**
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class Convolution extends MarvinAbstractImagePlugin{
 	public static final String ATTR_MATRIX = "matrix";

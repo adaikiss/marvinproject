@@ -19,7 +19,7 @@ import marvin.util.MarvinAttributes;
 
 /**
  * Absolute difference between two images considering the gray scale.
- * @author Danilo Rosetto Mu�oz
+ * @author Danilo Rosetto Muloz
  * @version 1.0 03/28/2008
  */
 

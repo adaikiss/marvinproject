@@ -11,12 +11,13 @@ https://groups.google.com/forum/#!forum/marvin-project
 
 package marvin.thread;
 
-import com.sun.xml.internal.bind.v2.TODO;
+//import com.sun.xml.internal.bind.v2.TODO;
 
 import marvin.image.MarvinImage;
 import marvin.image.MarvinImageMask;
 import marvin.plugin.MarvinPlugin;
 import marvin.plugin.MarvinImagePlugin;
+import marvin.util.MarvinAttributes;
 
 /**
  * Thread to process a segment or an entire image.
@@ -38,6 +39,7 @@ public class MarvinThread implements Runnable{
 									imageOut;
 	private MarvinImageMask 		imageMask;
 	PluginType 						eType;
+	private MarvinAttributes		attrIn;
 	
 	/**
 	 * Constructor.
@@ -62,6 +64,18 @@ public class MarvinThread implements Runnable{
 		eType = PluginType.PLUGIN_IMAGE;
 		thread = new Thread(this);
 	}
+	public MarvinThread
+			(
+					MarvinImagePlugin plg,
+					MarvinImage imgIn,
+					MarvinImage imgOut,
+					MarvinAttributes attrIn,
+					MarvinImageMask mask
+			)
+	{
+		this(plg, imgIn, imgOut, mask);
+		this.attrIn = attrIn;
+	}
 	
 	/**
 	 * @return MarvinThread id.
@@ -79,20 +93,20 @@ public class MarvinThread implements Runnable{
 	
 	/**
 	 * Set a thread listener.
-	 * {@link TODO} 			- Support a list of listeners.
-	 * @param a_listener		- listener object.
+	 * TODO:// 			- Support a list of listeners.
+	 * @param l		- listener object.
 	 */
 	public void addThreadListener(MarvinThreadListener l){
 		listener = l;
 	}
 	
 	/**
-	 * Thread´s run method.
+	 * Thread's run method.
 	 */
 	public void run(){
 		switch(eType){
 			case PLUGIN_IMAGE:
-				((MarvinImagePlugin)plugin).process(imageIn, imageOut, null, imageMask, false);
+				((MarvinImagePlugin)plugin).process(imageIn, imageOut, attrIn, null, imageMask, false);
 				if(listener != null){
 					listener.threadFinished(new MarvinThreadEvent(id, plugin));
 				}

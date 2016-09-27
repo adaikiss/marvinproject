@@ -19,7 +19,7 @@ import marvin.plugin.MarvinAbstractImagePlugin;
 import marvin.util.MarvinAttributes;
 
 /**
-* @author Gabriel Ambr�sio Archhanjo
+* @author Gabriel Ambrosio Archhanjo
 */
 public class Lindenmayer extends MarvinAbstractImagePlugin{
 	public static final String ATTR_ROTATION_ANGLE = "rotationAngle";

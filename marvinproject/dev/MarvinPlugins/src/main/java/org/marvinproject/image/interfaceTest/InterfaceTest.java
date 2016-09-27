@@ -22,7 +22,7 @@ import marvin.util.MarvinAttributes;
 /**
  * Marvin GUI test plug-in. This plug-in do not affect the image.
  * @version 02/28/08
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class InterfaceTest extends MarvinAbstractImagePlugin
 {

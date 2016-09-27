@@ -9,7 +9,7 @@
     <artifactId>marvin-plugins</artifactId>
     <packaging>jar</packaging>
     <version>${parent.version}</version>
-    <name>Marvin Framework</name>
+    <name>Marvin Plugins</name>
     <url></url>
 
     <properties>

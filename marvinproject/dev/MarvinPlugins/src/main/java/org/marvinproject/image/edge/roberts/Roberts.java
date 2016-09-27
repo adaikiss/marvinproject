@@ -22,7 +22,7 @@ import marvin.util.MarvinPluginLoader;
 import org.marvinproject.image.convolution.Convolution;
 
 /**
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class Roberts extends MarvinAbstractImagePlugin{
 

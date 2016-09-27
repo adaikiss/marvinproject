@@ -29,7 +29,7 @@ public class TileTexture extends MarvinAbstractImagePlugin{
 	private MarvinImagePlugin 		flip;
 	
 	public void load(){
-		setAttribute(ATTR_TILE, -1);
+//		setAttribute(ATTR_TILE, -1);
 		setAttribute(ATTR_LINES, 2);
 		setAttribute(ATTR_COLUMNS, 2);
 		

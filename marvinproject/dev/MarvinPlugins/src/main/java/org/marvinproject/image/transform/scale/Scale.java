@@ -19,7 +19,7 @@ import marvin.util.MarvinAttributes;
 
 /**
  * Simple and fast scale based on nearest neighbors
- * @author Gabriel Ambr�sio Archanjo
+ * @author Gabriel Ambrosio Archanjo
  */
 public class Scale extends MarvinAbstractImagePlugin{
 	public static final String ATTR_NEW_WIDTH = "newWidth";
@@ -49,9 +49,18 @@ public class Scale extends MarvinAbstractImagePlugin{
 		if(!previewMode){
 			width = a_imageIn.getWidth();
 			height = a_imageIn.getHeight();
-			newWidth = (Integer)getAttribute(ATTR_NEW_WIDTH, a_attributesIn);
-			newHeight = (Integer)getAttribute(ATTR_NEW_HEIGHT, a_attributesIn);
-			
+			Integer nw = (Integer)getAttribute(ATTR_NEW_WIDTH, a_attributesIn);
+			Integer nh = (Integer)getAttribute(ATTR_NEW_HEIGHT, a_attributesIn);
+			if(nw == null && nh == null) {
+				throw new IllegalArgumentException(ATTR_NEW_WIDTH + "或" + ATTR_NEW_HEIGHT + "至少需要出现一个");
+			}
+			if(nh == null) {
+				newWidth = nw;
+				newHeight = nw * height / width;
+			}else {
+				newHeight = nh;
+				newWidth = nh * width / height;
+			}
 			a_imageOut.setDimension(newWidth, newHeight);
 			
 		    int x_ratio = (width<<16)/newWidth;
